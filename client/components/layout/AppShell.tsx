@@ -3,91 +3,78 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UserButton } from '@clerk/nextjs'
 
-const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', emoji: '⊞' },
-  { href: '/exams', label: 'Exams', emoji: '📋' },
-  { href: '/study-plans', label: 'Study Plans', emoji: '🧠' },
-  { href: '/analytics', label: 'Analytics', emoji: '📊' },
-  { href: '/nlp', label: 'NLP Parser', emoji: '💬' },
+const NAV = [
+  { href: '/dashboard', label: 'Dashboard', icon: '⊞' },
+  { href: '/exams', label: 'Exams', icon: '📋' },
+  { href: '/study-plans', label: 'Study Plans', icon: '🧠' },
+  { href: '/analytics', label: 'Analytics', icon: '📊' },
+  { href: '/nlp', label: 'NLP Parser', icon: '💬' },
 ]
 
-interface AppShellProps {
-  children: React.ReactNode
-}
-
-export default function AppShell({ children }: AppShellProps) {
-  const pathname = usePathname()
+export default function AppShell({ children }: { children: React.ReactNode }) {
+  const path = usePathname()
+  const current = NAV.find(n => path.startsWith(n.href))
 
   return (
-    <div className="flex h-screen overflow-hidden bg-surface-50">
+    <div className="flex h-screen bg-gray-950 text-white overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-56 shrink-0 flex flex-col bg-white border-r border-surface-200">
+      <aside className="w-52 shrink-0 flex flex-col bg-gray-900 border-r border-white/8">
         {/* Logo */}
-        <div className="flex items-center gap-2.5 px-4 h-14 border-b border-surface-100">
-          <div className="w-7 h-7 rounded-lg bg-brand-600 flex items-center justify-center">
-            <span className="text-white text-xs font-bold">EF</span>
-          </div>
+        <div className="px-4 h-14 flex items-center gap-2.5 border-b border-white/8">
+          <div className="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center text-xs font-bold text-black shrink-0">EF</div>
           <div>
-            <p className="text-sm font-semibold text-surface-900 leading-none">ExamFlow</p>
-            <p className="text-[10px] text-surface-400 leading-none mt-0.5">AI Scheduler</p>
+            <p className="text-sm font-semibold leading-none">ExamFlow</p>
+            <p className="text-[10px] text-white/30 mt-0.5">AI Platform</p>
           </div>
         </div>
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          <p className="text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-3 mb-3">
-            Navigation
-          </p>
-          {NAV_ITEMS.map(({ href, label, emoji }) => {
-            const active = pathname === href || pathname.startsWith(href + '/')
+          {NAV.map(({ href, label, icon }) => {
+            const active = path === href || path.startsWith(href + '/')
             return (
               <Link
                 key={href}
                 href={href}
-                className={active ? 'nav-link-active' : 'nav-link'}
+                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all ${
+                  active
+                    ? 'bg-emerald-500/15 text-emerald-400 font-medium'
+                    : 'text-white/50 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <span className="text-base leading-none">{emoji}</span>
+                <span className="text-[15px]">{icon}</span>
                 <span>{label}</span>
-                {active && (
-                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-500" />
-                )}
+                {active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-400" />}
               </Link>
             )
           })}
         </nav>
 
-        {/* Footer */}
-        <div className="px-4 py-3 border-t border-surface-100">
-          <div className="flex items-center gap-2.5">
-            <UserButton afterSignOutUrl="/" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-surface-700 truncate">My Account</p>
-              <p className="text-[10px] text-surface-400">Manage profile</p>
-            </div>
-          </div>
+        {/* User */}
+        <div className="px-4 py-3 border-t border-white/8 flex items-center gap-2.5">
+          <UserButton afterSignOutUrl="/" />
+          <p className="text-xs text-white/40">Account</p>
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
+      {/* Main */}
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="h-14 shrink-0 flex items-center justify-between px-6 bg-white border-b border-surface-200">
-          <h1 className="text-sm font-semibold text-surface-900">
-            {NAV_ITEMS.find(n => pathname.startsWith(n.href))?.label || 'ExamFlow AI'}
-          </h1>
-          <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 text-xs text-surface-500 bg-surface-100 rounded-full px-2.5 py-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse-slow" />
-              AI Ready
-            </span>
+        <header className="h-14 shrink-0 flex items-center justify-between px-6 border-b border-white/8 bg-gray-900/50 backdrop-blur-sm">
+          <div className="flex items-center gap-2">
+            <h1 className="text-sm font-semibold">{current?.icon} {current?.label || 'ExamFlow AI'}</h1>
           </div>
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">
+            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+            AI Ready
+          </span>
         </header>
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto p-6 animate-fade-in">
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-6">
           {children}
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   )
 }
