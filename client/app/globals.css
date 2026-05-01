@@ -3,141 +3,86 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --color-bg: 248 250 252;
-    --color-surface: 255 255 255;
-    --color-border: 226 232 240;
-    --color-text: 15 23 42;
-    --color-muted: 100 116 139;
-  }
-
-  * {
-    @apply border-surface-200;
-  }
-
+  * { box-sizing: border-box; }
+  html { color-scheme: dark; }
   body {
-    @apply bg-surface-50 text-surface-900 antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    background: #030712;
+    color: white;
+    font-family: var(--font-inter, system-ui, sans-serif);
+    -webkit-font-smoothing: antialiased;
   }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
-  }
-
-  ::selection {
-    @apply bg-brand-100 text-brand-900;
-  }
-
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    @apply bg-surface-100;
-  }
-  ::-webkit-scrollbar-thumb {
-    @apply bg-surface-300 rounded-full;
-  }
+  ::selection { background: rgba(52,211,153,.25); }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: rgba(255,255,255,.04); }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.12); border-radius: 9999px; }
 }
 
 @layer components {
-  .card {
-    @apply bg-white rounded-xl border border-surface-200 shadow-sm;
+  /* Cards */
+  .card-dark {
+    @apply bg-gray-900 border border-white/8 rounded-xl;
   }
 
+  /* Buttons */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white
-           transition-all hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2
-           disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400
+           text-black font-semibold text-sm px-4 py-2 rounded-lg transition-all
+           disabled:opacity-40 disabled:cursor-not-allowed;
   }
-
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-surface-200 bg-white px-4 py-2 text-sm
-           font-medium text-surface-700 transition-all hover:bg-surface-50 focus:outline-none focus:ring-2
-           focus:ring-brand-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10
+           border border-white/10 hover:border-white/20 text-white text-sm px-4 py-2
+           rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed;
   }
-
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-surface-600
-           transition-all hover:bg-surface-100 hover:text-surface-900;
+    @apply inline-flex items-center justify-center gap-2 text-white/50 hover:text-white
+           hover:bg-white/5 text-sm px-3 py-2 rounded-lg transition-all;
   }
-
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-600
-           transition-all hover:bg-red-100;
+    @apply inline-flex items-center justify-center gap-1 text-red-400 hover:text-red-300
+           hover:bg-red-500/10 text-xs px-2.5 py-1.5 rounded-lg transition-all;
   }
 
-  .input {
-    @apply w-full rounded-lg border border-surface-200 bg-white px-3 py-2 text-sm text-surface-900 placeholder-surface-400
-           transition-colors focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500;
+  /* Inputs */
+  .input-dark {
+    @apply w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white
+           placeholder-white/25 outline-none transition-all
+           focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/30;
+  }
+  .label-dark {
+    @apply block text-xs font-medium text-white/50 mb-1.5;
   }
 
-  .label {
-    @apply block text-xs font-medium text-surface-600 mb-1.5;
-  }
+  /* Badges */
+  .badge { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium; }
+  .badge-emerald { @apply badge bg-emerald-500/15 text-emerald-400 border border-emerald-500/20; }
+  .badge-blue { @apply badge bg-blue-500/15 text-blue-400 border border-blue-500/20; }
+  .badge-orange { @apply badge bg-orange-500/15 text-orange-400 border border-orange-500/20; }
+  .badge-red { @apply badge bg-red-500/15 text-red-400 border border-red-500/20; }
+  .badge-gray { @apply badge bg-white/8 text-white/50 border border-white/10; }
 
-  .badge {
-    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
-  }
+  /* Skeleton */
+  .skeleton { @apply animate-pulse bg-white/6 rounded; }
 
-  .badge-green {
-    @apply badge bg-brand-50 text-brand-700;
-  }
-
-  .badge-blue {
-    @apply badge bg-blue-50 text-blue-700;
-  }
-
-  .badge-orange {
-    @apply badge bg-orange-50 text-orange-700;
-  }
-
-  .badge-red {
-    @apply badge bg-red-50 text-red-700;
-  }
-
-  .badge-gray {
-    @apply badge bg-surface-100 text-surface-600;
-  }
-
-  .skeleton {
-    @apply animate-pulse bg-surface-200 rounded;
-  }
-
-  .streaming-text {
-    @apply font-mono text-sm leading-relaxed;
-  }
-
+  /* Streaming */
   .streaming-cursor::after {
     content: '|';
-    @apply animate-pulse text-brand-500 ml-0.5;
-  }
-
-  .nav-link {
-    @apply flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-surface-600 transition-all
-           hover:bg-surface-100 hover:text-surface-900;
-  }
-
-  .nav-link-active {
-    @apply flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium bg-brand-50 text-brand-700;
+    color: #34d399;
+    animation: blink 1s step-end infinite;
+    margin-left: 1px;
   }
 }
 
-/* Chart tooltip override */
-.recharts-tooltip-wrapper {
-  @apply !shadow-lg;
-}
-
-.recharts-default-tooltip {
-  @apply !bg-white !border-surface-200 !rounded-lg !shadow-lg;
-}
-
-/* Streaming animation */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
 
-.cursor-blink {
-  animation: blink 1s step-end infinite;
+/* Recharts customisation */
+.recharts-default-tooltip {
+  background: #111827 !important;
+  border: 1px solid rgba(255,255,255,.1) !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
 }
+.recharts-tooltip-label { color: rgba(255,255,255,.5) !important; }
