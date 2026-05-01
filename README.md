@@ -10,7 +10,10 @@
 [![Claude AI](https://img.shields.io/badge/Claude-3.5%20Sonnet-d97706?logo=anthropic&logoColor=white)](https://anthropic.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-22c55e.svg)](LICENSE)
 
-[🚀 Live Demo](https://examflow-ai.vercel.app) · [📖 API Reference](docs/example-responses.md) · [🐛 Issues](https://github.com/grifkmat1/examflow-ai/issues)
+> 🚀 **Live demo coming soon** — deploying to Vercel + Render.
+> See [setup below](#local-setup) to run it locally in under 5 minutes.
+
+[📖 API Reference](docs/example-responses.md) · [🐛 Issues](https://github.com/grifkmat1/examflow-ai/issues)
 
 </div>
 
@@ -152,6 +155,11 @@ Set these in the Vercel dashboard:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `NEXT_PUBLIC_API_URL` → your Render backend URL
+
+Once deployed, update the README badge link:
+```
+[🚀 Live Demo](https://YOUR-APP.vercel.app)
+```
 
 ### Backend → Render
 
