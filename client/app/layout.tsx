@@ -16,17 +16,6 @@ export const metadata: Metadata = {
   description: 'AI-powered exam scheduling, conflict detection, and personalised study plans.',
 }
 
-// Conditionally wrap with Clerk only if keys are present
-const hasClerk = !!(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
-
-async function ClerkWrapper({ children }: { children: React.ReactNode }) {
-  if (hasClerk) {
-    const { ClerkProvider } = await import('@clerk/nextjs')
-    return <ClerkProvider>{children}</ClerkProvider>
-  }
-  return <>{children}</>
-}
-
 export default function RootLayout({
   children,
 }: {
@@ -35,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body className="min-h-screen bg-gray-950 antialiased">
-        <ClerkWrapper>{children}</ClerkWrapper>
+        {children}
       </body>
     </html>
   )
