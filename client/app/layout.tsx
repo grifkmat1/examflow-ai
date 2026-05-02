@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ClerkProvider } from '@clerk/nextjs'
 import './globals.css'
 
 const inter = Inter({
@@ -15,7 +14,17 @@ export const metadata: Metadata = {
     template: '%s | ExamFlow AI',
   },
   description: 'AI-powered exam scheduling, conflict detection, and personalised study plans.',
-  keywords: ['exam scheduling', 'study plans', 'AI', 'academic'],
+}
+
+// Conditionally wrap with Clerk only if keys are present
+const hasClerk = !!(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
+
+async function ClerkWrapper({ children }: { children: React.ReactNode }) {
+  if (hasClerk) {
+    const { ClerkProvider } = await import('@clerk/nextjs')
+    return <ClerkProvider>{children}</ClerkProvider>
+  }
+  return <>{children}</>
 }
 
 export default function RootLayout({
@@ -24,12 +33,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en" className={inter.variable} suppressHydrationWarning>
-        <body className="min-h-screen bg-surface-50 antialiased">
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className="min-h-screen bg-gray-950 antialiased">
+        <ClerkWrapper>{children}</ClerkWrapper>
+      </body>
+    </html>
   )
 }
