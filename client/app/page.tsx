@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
+
 export const metadata: Metadata = {
   title: 'ExamFlow AI — Exam Scheduling, Reimagined',
   description: 'Detect conflicts, generate AI study plans, and analyse your workload — all in one platform.',
 }
+
 
 const FEATURES = [
   { icon: '⚡', title: 'Instant Conflict Detection', desc: 'Submit your exam schedule and ExamFlow instantly flags overlapping or back-to-back exams — before they become a problem.', color: 'from-amber-500/20 to-orange-500/5', border: 'border-amber-500/20', tag: 'Rule-based + AI' },
@@ -13,12 +15,15 @@ const FEATURES = [
   { icon: '💬', title: 'Natural Language Parser', desc: 'Type "CS301 final on Dec 15 at 9am in Room 204" and ExamFlow parses course, date, time, and location automatically.', color: 'from-violet-500/20 to-purple-500/5', border: 'border-violet-500/20', tag: 'Claude AI · NLP' },
 ]
 
+
 const TECH = ['Next.js 14','TypeScript','Node.js','Claude AI','PostgreSQL','Supabase','Docker','Render','Vercel']
+
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gray-950 text-white overflow-x-hidden">
       <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.015)_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none" />
+
 
       {/* Nav */}
       <nav className="relative z-10 border-b border-white/8 bg-gray-950/80 backdrop-blur-md sticky top-0">
@@ -33,6 +38,7 @@ export default function LandingPage() {
           </Link>
         </div>
       </nav>
+
 
       {/* Hero */}
       <section className="relative z-10 max-w-5xl mx-auto px-6 pt-24 pb-20 text-center">
@@ -58,6 +64,7 @@ export default function LandingPage() {
         <p className="mt-6 text-xs text-white/25">No sign-up · No credit card · Full demo data</p>
       </section>
 
+
       {/* Mock dashboard preview */}
       <section className="relative z-10 max-w-5xl mx-auto px-6 pb-20">
         <div className="relative rounded-2xl border border-white/10 bg-gray-900/80 overflow-hidden shadow-2xl shadow-black/40">
@@ -78,82 +85,4 @@ export default function LandingPage() {
                 {[{l:'Exams',v:'5',c:'text-white'},{l:'Conflicts',v:'1',c:'text-red-400'},{l:'Credit Hrs',v:'16',c:'text-blue-400'},{l:'Risk',v:'HIGH',c:'text-orange-400'}].map(s => (
                   <div key={s.l} className="bg-gray-800/60 rounded-lg p-3 border border-white/6">
                     <p className="text-[10px] text-white/35 mb-1">{s.l}</p>
-                    <p className={`text-lg font-bold ${s.c}`}>{s.v}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="bg-red-500/8 border border-red-500/20 rounded-lg p-3 mb-4 flex items-start gap-2">
-                <span className="text-red-400 text-xs mt-0.5">⚠</span>
-                <div>
-                  <p className="text-xs font-medium text-red-400">Scheduling conflict detected</p>
-                  <p className="text-[10px] text-white/40 mt-0.5">CS401 and MATH301 overlap by 30 minutes on May 12th</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                {[{code:'CS401',title:'Algorithms',type:'FINAL',date:'May 12 · 9am'},{code:'MATH301',title:'Linear Algebra',type:'MIDTERM',date:'May 12 · 10:30am'},{code:'PHYS201',title:'Mechanics',type:'FINAL',date:'May 14 · 2pm'}].map(e => (
-                  <div key={e.code} className="bg-gray-800/50 rounded-lg p-3 border border-white/6">
-                    <div className="flex items-center gap-1.5 mb-1.5">
-                      <span className="text-[9px] font-mono text-white/35">{e.code}</span>
-                      <span className={`text-[8px] font-medium px-1.5 py-0.5 rounded-full ${e.type==='FINAL'?'bg-red-500/15 text-red-400':'bg-orange-500/15 text-orange-400'}`}>{e.type}</span>
-                    </div>
-                    <p className="text-[11px] font-medium text-white/80 mb-1">{e.title}</p>
-                    <p className="text-[10px] text-white/35">{e.date}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-950 to-transparent pointer-events-none" />
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="relative z-10 max-w-5xl mx-auto px-6 pb-20">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Everything you need to ace finals week</h2>
-          <p className="text-white/40 text-sm max-w-lg mx-auto">Four tools. One platform. Zero scheduling disasters.</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {FEATURES.map(f => (
-            <div key={f.title} className={`relative p-6 rounded-2xl border bg-gradient-to-br ${f.color} ${f.border} group hover:scale-[1.01] transition-all`}>
-              <div className="flex items-start justify-between mb-4">
-                <span className="text-3xl">{f.icon}</span>
-                <span className="text-[10px] text-white/35 bg-white/6 px-2 py-1 rounded-full font-mono">{f.tag}</span>
-              </div>
-              <h3 className="text-base font-semibold mb-2">{f.title}</h3>
-              <p className="text-sm text-white/50 leading-relaxed">{f.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="relative z-10 max-w-3xl mx-auto px-6 pb-24 text-center">
-        <div className="border border-emerald-500/20 bg-emerald-500/5 rounded-2xl p-10">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">See it in action</h2>
-          <p className="text-white/45 text-sm mb-8 max-w-md mx-auto">Full demo — no sign-up needed. Add exams, detect conflicts, generate an AI study plan.</p>
-          <Link href="/dashboard" className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-8 py-3.5 rounded-xl text-sm transition-all shadow-xl shadow-emerald-500/30 hover:scale-105">
-            Open live demo →
-          </Link>
-        </div>
-      </section>
-
-      {/* Tech + Footer */}
-      <section className="relative z-10 border-t border-white/8 py-8">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <p className="text-xs text-white/25 mb-4 uppercase tracking-widest">Built with</p>
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {TECH.map(t => (
-              <span key={t} className="text-xs text-white/45 bg-white/5 border border-white/8 px-3 py-1.5 rounded-full">{t}</span>
-            ))}
-          </div>
-          <div className="flex items-center justify-center gap-6 text-xs text-white/25">
-            <span>ExamFlow AI · v2.0</span>
-            <Link href="https://github.com/grifkmat1/examflow-ai" className="hover:text-white/50 transition-colors">GitHub →</Link>
-            <span>MIT License</span>
-          </div>
-        </div>
-      </section>
-    </div>
-  )
-}
+// v2.1
