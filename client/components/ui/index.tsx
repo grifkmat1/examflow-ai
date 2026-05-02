@@ -1,11 +1,10 @@
 'use client'
+import React from 'react'
 
-// ─── Utility ──────────────────────────────────────────────────────────────────
 export function cn(...classes: (string | boolean | undefined | null)[]): string {
   return classes.filter(Boolean).join(' ')
 }
 
-// ─── Spinner ──────────────────────────────────────────────────────────────────
 export function Spinner({ className }: { className?: string }) {
   return (
     <svg className={cn('animate-spin h-4 w-4', className || 'text-emerald-400')} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -15,25 +14,18 @@ export function Spinner({ className }: { className?: string }) {
   )
 }
 
-// ─── Card ─────────────────────────────────────────────────────────────────────
 export function Card({ children, className, hover = false }: { children: React.ReactNode; className?: string; hover?: boolean }) {
   return (
-    <div className={cn(
-      'bg-gray-900 border border-white/8 rounded-xl',
-      hover && 'transition-all hover:border-white/15 hover:bg-gray-800/80',
-      className
-    )}>
+    <div className={cn('bg-gray-900 border border-white/8 rounded-xl', hover && 'transition-all hover:border-white/15 hover:bg-gray-800/80', className)}>
       {children}
     </div>
   )
 }
 
-// ─── Stat Card ────────────────────────────────────────────────────────────────
 interface StatCardProps {
   label: string
   value: string | number
   sub?: string
-  trend?: 'up' | 'down' | 'neutral'
   accent?: string
   icon?: React.ReactNode
 }
@@ -51,18 +43,7 @@ export function StatCard({ label, value, sub, accent = 'text-white', icon }: Sta
   )
 }
 
-// ─── Section Header ───────────────────────────────────────────────────────────
-export function SectionHeader({ title, action }: { title: string; action?: React.ReactNode }) {
-  return (
-    <div className="flex items-center justify-between mb-4">
-      <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{title}</h2>
-      {action}
-    </div>
-  )
-}
-
-// ─── Empty State ──────────────────────────────────────────────────────────────
-export function EmptyState({ icon = '📭', title, desc, action }: { icon?: string; title: string; desc?: string; action?: React.ReactNode }) {
+export function EmptyState({ icon = '📭', title, desc, action }: { icon?: React.ReactNode; title: string; desc?: string; action?: React.ReactNode }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center px-6">
       <span className="text-4xl mb-4 opacity-50">{icon}</span>
@@ -73,7 +54,6 @@ export function EmptyState({ icon = '📭', title, desc, action }: { icon?: stri
   )
 }
 
-// ─── Error Banner ─────────────────────────────────────────────────────────────
 export function ErrorBanner({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
     <div className="flex items-start gap-3 bg-red-500/8 border border-red-500/20 rounded-xl p-4">
@@ -81,38 +61,31 @@ export function ErrorBanner({ message, onRetry }: { message: string; onRetry?: (
       <div className="flex-1">
         <p className="text-sm text-red-400 font-medium">{message}</p>
         {onRetry && (
-          <button onClick={onRetry} className="text-xs text-red-400/70 hover:text-red-400 mt-1 underline underline-offset-2">
-            Try again
-          </button>
+          <button onClick={onRetry} className="text-xs text-red-400/70 hover:text-red-400 mt-1 underline underline-offset-2">Try again</button>
         )}
       </div>
     </div>
   )
 }
 
-// ─── Conflict Alert ───────────────────────────────────────────────────────────
 export function ConflictAlert({ message, severity, exams }: { message: string; severity: 'HIGH' | 'MEDIUM' | 'LOW'; exams?: string[] }) {
   const styles = {
     HIGH: { bg: 'bg-red-500/8 border-red-500/25', icon: '🔴', text: 'text-red-400' },
     MEDIUM: { bg: 'bg-orange-500/8 border-orange-500/25', icon: '🟠', text: 'text-orange-400' },
     LOW: { bg: 'bg-yellow-500/8 border-yellow-500/25', icon: '🟡', text: 'text-yellow-400' },
   }[severity]
-
   return (
     <div className={`flex items-start gap-3 border rounded-xl p-4 ${styles.bg}`}>
       <span className="shrink-0 mt-0.5">{styles.icon}</span>
       <div>
         <p className={`text-sm font-semibold ${styles.text}`}>{severity} — Scheduling Conflict</p>
         <p className="text-xs text-white/50 mt-0.5 leading-relaxed">{message}</p>
-        {exams && exams.length > 0 && (
-          <p className="text-xs text-white/30 mt-1 font-mono">{exams.join(' ↔ ')}</p>
-        )}
+        {exams && exams.length > 0 && <p className="text-xs text-white/30 mt-1 font-mono">{exams.join(' ↔ ')}</p>}
       </div>
     </div>
   )
 }
 
-// ─── Exam Type Badge ──────────────────────────────────────────────────────────
 export function ExamTypeBadge({ type }: { type: string }) {
   const map: Record<string, string> = {
     FINAL: 'bg-red-500/15 text-red-400 border-red-500/20',
@@ -127,7 +100,6 @@ export function ExamTypeBadge({ type }: { type: string }) {
   )
 }
 
-// ─── Skeletons ────────────────────────────────────────────────────────────────
 export function CardSkeleton({ lines = 2 }: { lines?: number }) {
   return (
     <div className="bg-gray-900 border border-white/8 rounded-xl p-5 space-y-3 animate-pulse">
@@ -144,19 +116,18 @@ export function TableRowSkeleton() {
       <div className="h-3 w-16 bg-white/8 rounded-full" />
       <div className="h-3 flex-1 bg-white/6 rounded-full" />
       <div className="h-5 w-14 bg-white/8 rounded-full" />
-      <div className="h-3 w-24 bg-white/6 rounded-full" />
     </div>
   )
 }
 
-// ─── Demo Mode Banner ─────────────────────────────────────────────────────────
+// Alias for backwards compatibility
+export const TableSkeleton = TableRowSkeleton
+
 export function DemoBanner() {
   return (
     <div className="flex items-center gap-2 bg-amber-500/8 border border-amber-500/20 rounded-xl px-4 py-3">
       <span className="text-amber-400 text-sm">⚡</span>
-      <p className="text-xs text-amber-400 font-medium">
-        Demo mode — showing sample data. Connect your backend to use live data.
-      </p>
+      <p className="text-xs text-amber-400 font-medium">Demo mode — showing sample data. Connect your backend to use live data.</p>
     </div>
   )
 }
