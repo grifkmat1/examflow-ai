@@ -2,6 +2,7 @@
 
 const logger = require('../utils/logger');
 
+// Express error handler — next is required as 4th param even if unused
 // eslint-disable-next-line no-unused-vars
 const errorHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || err.status || 500;
