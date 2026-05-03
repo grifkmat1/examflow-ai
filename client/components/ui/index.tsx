@@ -29,7 +29,6 @@ interface StatCardProps {
   accent?: string
   icon?: React.ReactNode
 }
-
 export function StatCard({ label, value, sub, accent = 'text-white', icon }: StatCardProps) {
   return (
     <Card className="p-5">
@@ -43,7 +42,13 @@ export function StatCard({ label, value, sub, accent = 'text-white', icon }: Sta
   )
 }
 
-export function EmptyState({ icon = '📭', title, desc, action }: { icon?: React.ReactNode; title: string; desc?: string; action?: React.ReactNode }) {
+interface EmptyStateProps {
+  icon?: React.ReactNode
+  title: string
+  desc?: string
+  action?: React.ReactNode
+}
+export function EmptyState({ icon = '📭', title, desc, action }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center px-6">
       <span className="text-4xl mb-4 opacity-50">{icon}</span>
@@ -60,9 +65,7 @@ export function ErrorBanner({ message, onRetry }: { message: string; onRetry?: (
       <span className="text-red-400 text-sm mt-0.5 shrink-0">⚠</span>
       <div className="flex-1">
         <p className="text-sm text-red-400 font-medium">{message}</p>
-        {onRetry && (
-          <button onClick={onRetry} className="text-xs text-red-400/70 hover:text-red-400 mt-1 underline underline-offset-2">Try again</button>
-        )}
+        {onRetry && <button onClick={onRetry} className="text-xs text-red-400/70 hover:text-red-400 mt-1 underline underline-offset-2">Try again</button>}
       </div>
     </div>
   )
@@ -100,12 +103,12 @@ export function ExamTypeBadge({ type }: { type: string }) {
   )
 }
 
-export function CardSkeleton({ lines = 2 }: { lines?: number }) {
+export function CardSkeleton() {
   return (
     <div className="bg-gray-900 border border-white/8 rounded-xl p-5 space-y-3 animate-pulse">
       <div className="h-3 w-1/3 bg-white/8 rounded-full" />
       <div className="h-7 w-1/2 bg-white/8 rounded-lg" />
-      {lines > 1 && <div className="h-2.5 w-2/3 bg-white/5 rounded-full" />}
+      <div className="h-2.5 w-2/3 bg-white/5 rounded-full" />
     </div>
   )
 }
@@ -120,7 +123,6 @@ export function TableRowSkeleton() {
   )
 }
 
-// Alias for backwards compatibility
 export const TableSkeleton = TableRowSkeleton
 
 export function DemoBanner() {
