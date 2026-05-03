@@ -1,10 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { format, isPast } from 'date-fns'
+import { format } from 'date-fns'
 import { examsApi, healthApi } from '@/lib/api'
 import type { Exam, Conflict } from '@/lib/types'
-import { StatCard, Card, ConflictAlert, ExamTypeBadge, CardSkeleton, ErrorBanner, EmptyState, DemoBanner } from '@/components/ui'
+import { StatCard, Card, ConflictAlert, ExamTypeBadge, CardSkeleton, EmptyState, DemoBanner } from '@/components/ui'
 
 const DEMO: Exam[] = [
   { id:'1', course_code:'CS401', course_title:'Algorithms & Data Structures', exam_type:'FINAL', start_time:'2025-05-12T09:00:00Z', end_time:'2025-05-12T11:00:00Z', semester:'Spring 2025', location:'Hall A-101', credit_hours:4 },
@@ -14,7 +14,6 @@ const DEMO: Exam[] = [
 const DEMO_CONFLICTS: Conflict[] = [
   { type:'OVERLAP', severity:'HIGH', message:'CS401 and MATH301 overlap by 30 minutes on May 12th.', exams:[DEMO[0],DEMO[1]] }
 ]
-
 const QUICK = [
   { href:'/exams', icon:'📋', label:'Add Exam', desc:'Schedule a new exam' },
   { href:'/study-plans', icon:'🧠', label:'Study Plan', desc:'Generate with Claude AI' },
@@ -51,7 +50,6 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-xl font-bold text-white">Dashboard</h1>
@@ -59,81 +57,61 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center gap-2">
           {isDemo && <span className="text-[10px] bg-amber-500/15 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-full font-medium">Demo data</span>}
-          <span className={`text-[10px] px-2.5 py-1 rounded-full font-medium border ${
-            apiStatus === 'online' ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20' :
-            apiStatus === 'offline' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-            'bg-white/5 text-white/30 border-white/10'
-          }`}>
-            {apiStatus === 'online' ? '● API connected' : apiStatus === 'offline' ? '○ API offline' : '◌ Checking...'}
+          <span className={`text-[10px] px-2.5 py-1 rounded-full font-medium border ${apiStatus==='online'?'bg-emerald-500/15 text-emerald-400 border-emerald-500/20':apiStatus==='offline'?'bg-red-500/10 text-red-400 border-red-500/20':'bg-white/5 text-white/30 border-white/10'}`}>
+            {apiStatus==='online'?'● API connected':apiStatus==='offline'?'○ API offline':'◌ Checking...'}
           </span>
         </div>
       </div>
 
       {isDemo && <DemoBanner />}
 
-      {/* Stats */}
       {loading ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1,2,3,4].map(i => <CardSkeleton key={i} />)}
-        </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">{[1,2,3,4].map(i=><CardSkeleton key={i}/>)}</div>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard label="Total Exams" value={exams.length} sub="this semester" icon="📋" />
-          <StatCard label="Conflicts" value={conflicts.length} sub="detected" accent={conflicts.length > 0 ? 'text-red-400' : 'text-emerald-400'} icon="⚠️" />
+          <StatCard label="Conflicts" value={conflicts.length} sub="detected" accent={conflicts.length>0?'text-red-400':'text-emerald-400'} icon="⚠️" />
           <StatCard label="Credit Hours" value={totalCredits} sub="total load" accent="text-blue-400" icon="📚" />
           <StatCard label="Finals" value={finals} sub="high-stakes exams" accent="text-orange-400" icon="🎓" />
         </div>
       )}
 
-      {/* Conflicts */}
       {!loading && conflicts.length > 0 && (
         <div className="space-y-2">
           <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider">Active Conflicts</p>
-          {conflicts.map((c, i) => (
-            <ConflictAlert key={i} message={c.message} severity={c.severity} exams={c.exams?.map(e => e.course_code)} />
-          ))}
+          {conflicts.map((c,i) => <ConflictAlert key={i} message={c.message} severity={c.severity} exams={c.exams?.map(e=>e.course_code)} />)}
         </div>
       )}
 
-      {/* Upcoming exams */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider">Upcoming Exams</p>
           <Link href="/exams" className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors font-medium">View all →</Link>
         </div>
-
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {[1,2,3].map(i => <CardSkeleton key={i} />)}
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">{[1,2,3].map(i=><CardSkeleton key={i}/>)}</div>
         ) : exams.length === 0 ? (
           <Card className="border-dashed">
-            <EmptyState icon="📅" title="No exams yet" desc="Add your first exam to get started tracking your schedule." action={<Link href="/exams" className="btn-primary text-xs py-1.5 px-4">Add exam</Link>} />
+            <EmptyState icon="📅" title="No exams yet" desc="Add your first exam to get started." action={<Link href="/exams" className="text-xs bg-emerald-500 text-black font-semibold px-4 py-1.5 rounded-lg">Add exam</Link>} />
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {exams.slice(0,6).map(exam => {
-              const start = new Date(exam.start_time)
-              return (
-                <Card key={exam.id} hover className="p-4 group">
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="text-[10px] font-mono text-white/35">{exam.course_code}</span>
-                    <ExamTypeBadge type={exam.exam_type} />
-                  </div>
-                  <h3 className="text-sm font-semibold text-white/85 mb-2.5 leading-tight line-clamp-1 group-hover:text-white transition-colors">{exam.course_title}</h3>
-                  <div className="space-y-1">
-                    <p className="text-xs text-white/40">{format(start, 'MMM d, yyyy')} · {format(start, 'h:mm a')}</p>
-                    {exam.location && <p className="text-xs text-white/30">📍 {exam.location}</p>}
-                    {exam.credit_hours && <p className="text-xs text-white/30">{exam.credit_hours} credit hrs</p>}
-                  </div>
-                </Card>
-              )
-            })}
+            {exams.slice(0,6).map(exam => (
+              <Card key={exam.id} hover className="p-4 group">
+                <div className="flex items-center justify-between mb-2.5">
+                  <span className="text-[10px] font-mono text-white/35">{exam.course_code}</span>
+                  <ExamTypeBadge type={exam.exam_type} />
+                </div>
+                <h3 className="text-sm font-semibold text-white/85 mb-2 line-clamp-1 group-hover:text-white transition-colors">{exam.course_title}</h3>
+                <p className="text-xs text-white/40">{format(new Date(exam.start_time),'MMM d, yyyy')} · {format(new Date(exam.start_time),'h:mm a')}</p>
+                {exam.location && <p className="text-xs text-white/30 mt-0.5">📍 {exam.location}</p>}
+                {exam.credit_hours && <p className="text-xs text-white/30 mt-0.5">{exam.credit_hours} credit hrs</p>}
+              </Card>
+            ))}
           </div>
         )}
       </div>
 
-      {/* Quick actions */}
       <div>
         <p className="text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-3">Quick Actions</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
