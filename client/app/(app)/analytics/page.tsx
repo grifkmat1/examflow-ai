@@ -20,20 +20,25 @@ export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    examsApi.list().then(({ exams: l }) => setExams(l)).catch(() => setExams(DEMO)).finally(() => setLoading(false))
+    examsApi.list().then(({exams:list}) => setExams(list)).catch(() => setExams(DEMO)).finally(() => setLoading(false))
   }, [])
 
-  const totalCredits = exams.reduce((s, e) => s + (e.credit_hours || 0), 0)
-  const finals = exams.filter(e => e.exam_type === 'FINAL').length
+  const totalCredits = exams.reduce((s,e) => s+(e.credit_hours||0), 0)
+  const finals = exams.filter(e => e.exam_type==='FINAL').length
   const typeCounts: Record<string,number> = {}
-  exams.forEach(e => { typeCounts[e.exam_type] = (typeCounts[e.exam_type] || 0) + 1 })
-  const pieData = Object.entries(typeCounts).map(([name, value]) => ({ name, value }))
+  exams.forEach(e => { typeCounts[e.exam_type]=(typeCounts[e.exam_type]||0)+1 })
+  const pieData = Object.entries(typeCounts).map(([name,value]) => ({name,value}))
   const dayMap: Record<string,number> = {}
-  exams.forEach(e => { const d = format(new Date(e.start_time), 'MMM d'); dayMap[d] = (dayMap[d]||0)+1 })
-  const dailyData = Object.entries(dayMap).map(([date, count]) => ({ date, count }))
-  const creditData = exams.map(e => ({ name: e.course_code, credits: e.credit_hours||0, type: e.exam_type }))
+  exams.forEach(e => { const d=format(new Date(e.start_time),'MMM d'); dayMap[d]=(dayMap[d]||0)+1 })
+  const dailyData = Object.entries(dayMap).map(([date,count]) => ({date,count}))
+  const creditData = exams.map(e => ({name:e.course_code,credits:e.credit_hours||0,type:e.exam_type}))
 
-  if (loading) return <div className="max-w-5xl mx-auto space-y-6"><div className="grid grid-cols-4 gap-4">{[1,2,3,4].map(i=><CardSkeleton key={i}/>)}</div></div>
+  if (loading) return (
+    <div className="max-w-5xl mx-auto space-y-6">
+      <div className="h-8 w-48 bg-white/8 rounded animate-pulse"/>
+      <div className="grid grid-cols-4 gap-4">{[1,2,3,4].map(i=><CardSkeleton key={i}/>)}</div>
+    </div>
+  )
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -41,36 +46,62 @@ export default function AnalyticsPage() {
         <h1 className="text-xl font-bold text-white">Analytics</h1>
         <p className="text-sm text-white/40 mt-0.5">Workload analysis and schedule insights</p>
       </div>
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Total Exams" value={exams.length} icon="📋" />
         <StatCard label="Credit Hours" value={totalCredits} accent="text-blue-400" icon="📚" />
         <StatCard label="Finals" value={finals} accent="text-red-400" icon="🎓" />
         <StatCard label="Subjects" value={new Set(exams.map(e=>e.course_code)).size} accent="text-emerald-400" icon="📖" />
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <Card className="p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Exam Types</h2>
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
               <Pie data={pieData} cx="50%" cy="50%" innerRadius={45} outerRadius={75} paddingAngle={3} dataKey="value">
-                {pieData.map(entry => <Cell key={entry.name} fill={COLORS[entry.name]||'#94a3b8'} />)}
+                {pieData.map(entry => <Cell key={entry.name} fill={COLORS[entry.name]||'#94a3b8'}/>)}
               </Pie>
-              <Tooltip contentStyle={{ background:'#111827', border:'1px solid rgba(255,255,255,.1)', borderRadius:8, fontSize:11 }} />
+              <Tooltip contentStyle={{background:'#111827',border:'1px solid rgba(255,255,255,.1)',borderRadius:'8px',fontSize:'12px'}}/>
             </PieChart>
           </ResponsiveContainer>
+          <div className="flex flex-wrap gap-2 justify-center mt-2">
+            {pieData.map(d=>(
+              <div key={d.name} className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full" style={{background:COLORS[d.name]||'#94a3b8'}}/>
+                <span className="text-[10px] text-white/40">{d.name}: {d.value}</span>
+              </div>
+            ))}
+          </div>
         </Card>
+
         <Card className="lg:col-span-2 p-5">
           <h2 className="text-sm font-semibold text-white/70 mb-4">Exams per Day</h2>
           <ResponsiveContainer width="100%" height={180}>
             <BarChart data={dailyData} barSize={28}>
-              <XAxis dataKey="date" tick={{ fontSize:11, fill:'rgba(255,255,255,.3)' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize:11, fill:'rgba(255,255,255,.3)' }} axisLine={false} tickLine={false} allowDecimals={false} />
-              <Tooltip contentStyle={{ background:'#111827', border:'1px solid rgba(255,255,255,.1)', borderRadius:8, fontSize:11 }} />
-              <Bar dataKey="count" fill="#22c55e" radius={[4,4,0,0]} name="Exams" />
+              <XAxis dataKey="date" tick={{fontSize:11,fill:'rgba(255,255,255,.3)'}} axisLine={false} tickLine={false}/>
+              <YAxis tick={{fontSize:11,fill:'rgba(255,255,255,.3)'}} axisLine={false} tickLine={false} allowDecimals={false}/>
+              <Tooltip contentStyle={{background:'#111827',border:'1px solid rgba(255,255,255,.1)',borderRadius:'8px',fontSize:'12px'}}/>
+              <Bar dataKey="count" fill="#22c55e" radius={[4,4,0,0]} name="Exams"/>
             </BarChart>
           </ResponsiveContainer>
         </Card>
       </div>
+
+      <Card className="p-5">
+        <h2 className="text-sm font-semibold text-white/70 mb-4">Credit Hours by Course</h2>
+        <ResponsiveContainer width="100%" height={160}>
+          <BarChart data={creditData} barSize={32}>
+            <XAxis dataKey="name" tick={{fontSize:10,fill:'rgba(255,255,255,.3)'}} axisLine={false} tickLine={false}/>
+            <YAxis tick={{fontSize:11,fill:'rgba(255,255,255,.3)'}} axisLine={false} tickLine={false}/>
+            <Tooltip contentStyle={{background:'#111827',border:'1px solid rgba(255,255,255,.1)',borderRadius:'8px',fontSize:'12px'}}/>
+            <Bar dataKey="credits" radius={[4,4,0,0]} name="Credits">
+              {creditData.map((entry,i) => <Cell key={i} fill={COLORS[entry.type]||'#94a3b8'}/>)}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </Card>
+
       <Card className="p-5">
         <h2 className="text-sm font-semibold text-white/70 mb-4">Schedule Detail</h2>
         <div className="overflow-x-auto">
@@ -82,10 +113,10 @@ export default function AnalyticsPage() {
               {exams.map(exam => (
                 <tr key={exam.id} className="hover:bg-white/3">
                   <td className="py-2.5 pr-4 font-mono text-white/50">{exam.course_code}</td>
-                  <td className="py-2.5 pr-4 text-white/70 max-w-[160px] truncate">{exam.course_title}</td>
-                  <td className="py-2.5 pr-4"><ExamTypeBadge type={exam.exam_type} /></td>
+                  <td className="py-2.5 pr-4 text-white/70">{exam.course_title}</td>
+                  <td className="py-2.5 pr-4"><ExamTypeBadge type={exam.exam_type}/></td>
                   <td className="py-2.5 pr-4 text-white/50">{format(new Date(exam.start_time),'MMM d, yyyy')}</td>
-                  <td className="py-2.5 text-white/50">{exam.credit_hours||'—'}</td>
+                  <td className="py-2.5 pr-4 text-white/50">{exam.credit_hours||'—'}</td>
                 </tr>
               ))}
             </tbody>
@@ -94,4 +125,4 @@ export default function AnalyticsPage() {
       </Card>
     </div>
   )
-          }
+}
