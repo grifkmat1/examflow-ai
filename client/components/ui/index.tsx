@@ -65,7 +65,7 @@ export function ErrorBanner({ message, onRetry }: { message: string; onRetry?: (
       <span className="text-red-400 text-sm mt-0.5 shrink-0">⚠</span>
       <div className="flex-1">
         <p className="text-sm text-red-400 font-medium">{message}</p>
-        {onRetry && <button onClick={onRetry} className="text-xs text-red-400/70 hover:text-red-400 mt-1 underline underline-offset-2">Try again</button>}
+        {onRetry && <button onClick={onRetry} className="text-xs text-red-400/70 hover:text-red-400 mt-1 underline">Try again</button>}
       </div>
     </div>
   )
@@ -82,7 +82,7 @@ export function ConflictAlert({ message, severity, exams }: { message: string; s
       <span className="shrink-0 mt-0.5">{styles.icon}</span>
       <div>
         <p className={`text-sm font-semibold ${styles.text}`}>{severity} — Scheduling Conflict</p>
-        <p className="text-xs text-white/50 mt-0.5 leading-relaxed">{message}</p>
+        <p className="text-xs text-white/50 mt-0.5">{message}</p>
         {exams && exams.length > 0 && <p className="text-xs text-white/30 mt-1 font-mono">{exams.join(' ↔ ')}</p>}
       </div>
     </div>
@@ -129,7 +129,7 @@ export function DemoBanner() {
   return (
     <div className="flex items-center gap-2 bg-amber-500/8 border border-amber-500/20 rounded-xl px-4 py-3">
       <span className="text-amber-400 text-sm">⚡</span>
-      <p className="text-xs text-amber-400 font-medium">Demo mode — showing sample data. Connect your backend to use live data.</p>
+      <p className="text-xs text-amber-400 font-medium">Demo mode — showing sample data.</p>
     </div>
   )
 }
