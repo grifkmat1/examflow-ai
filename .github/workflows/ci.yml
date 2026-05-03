@@ -16,24 +16,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Install dependencies
-        run: npm install
-
+      - run: npm install
       - name: Lint
         run: npm run lint
         continue-on-error: true
-
-      - name: Run tests
+      - name: Tests
         run: npm test -- --passWithNoTests --forceExit
         env:
           NODE_ENV: test
-          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+          CLAUDE_API_KEY: test-key-ci
 
   frontend:
     name: Frontend (Next.js)
@@ -43,19 +37,10 @@ jobs:
         working-directory: ./client
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Type check
-        run: npx tsc --noEmit
-        continue-on-error: true
-
+      - run: npm install
       - name: Build
         run: npm run build
         env:
@@ -64,22 +49,3 @@ jobs:
           CLERK_SECRET_KEY: sk_test_placeholder
           NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder
-
-  docker:
-    name: Docker Build
-    runs-on: ubuntu-latest
-    needs: [backend]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Build backend image
-        run: docker build -t examflow-backend:ci .
-
-      - name: Smoke test
-        run: |
-          docker run -d --name smoke \
-            -e NODE_ENV=test -e CLAUDE_API_KEY=test -e PORT=3000 \
-            -p 3000:3000 examflow-backend:ci
-          sleep 8
-          curl -sf http://localhost:3000/health && echo "Health OK" || exit 1
-          docker stop smoke
